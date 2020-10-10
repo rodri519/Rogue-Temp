@@ -1,4 +1,4 @@
-public class Item extends Displayable{
+abstract class Item extends Displayable{
 
     public void setOwner(Creature owner){
         System.out.println("Item (setOwner)");
