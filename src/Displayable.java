@@ -1,6 +1,6 @@
 abstract class Displayable {
 
-    public void Displayable(){
+    public Displayable(){
         System.out.println("Displayable (Displayable)");
     }
 

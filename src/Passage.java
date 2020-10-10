@@ -1,6 +1,6 @@
 public class Passage {
 
-    public void Passage(){
+    public Passage(){
         System.out.println("Passage (Passage)");
     }
 

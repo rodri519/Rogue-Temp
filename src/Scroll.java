@@ -1,6 +1,6 @@
 public class Scroll extends Item{
 
-    public void Scroll(String name){
+    public Scroll(String name){
         System.out.println("Scroll (Scroll)");
     }
 

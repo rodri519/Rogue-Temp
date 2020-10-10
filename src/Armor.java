@@ -1,6 +1,6 @@
 public class Armor extends Item{
 
-    public void Armor(String name){
+    public Armor(String name){
         System.out.println("Armor (Armor)");
     }
 

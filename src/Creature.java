@@ -1,6 +1,6 @@
 abstract class Creature extends Displayable{
 
-    public void Creature(){
+    public Creature(){
         System.out.println("Creature: ");
     }
 
