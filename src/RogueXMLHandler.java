@@ -4,14 +4,23 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+//Need:
+//constructor for dungeon - singleton/static?
+//constructor for player
+//creature print statement creature:
+//player -> setHpMove:
+//clean up code
+//dungeon adding rooms/passages
+//gray variables
+//compare to example
+
 public class RogueXMLHandler extends DefaultHandler{
     private StringBuilder data = null;
 
     private static final int DEBUG = 1;
     private static final String CLASSID = "StudentXMLHandler";
 
-    //private Room[] rooms;
-    //private Passage[] passages;
+
     private Dungeon dungeon;
     private ObjectDisplayGrid objectDisplayGrid;
     private String name;
@@ -51,7 +60,6 @@ public class RogueXMLHandler extends DefaultHandler{
         passages.add(passage);
     }
 
-
     public RogueXMLHandler() {
     }
 
@@ -64,6 +72,7 @@ public class RogueXMLHandler extends DefaultHandler{
             topHeight = Integer.parseInt(attributes.getValue("topHeight"));
             gameHeight = Integer.parseInt(attributes.getValue("gameHeight"));
             bottomHeight = Integer.parseInt(attributes.getValue("bottomHeight"));
+            //construct dungeon and/or objectdisplaygrid??
 
         } else if (qName.equalsIgnoreCase("Rooms")) {
             //anything in here?? rooms = new Room[];
@@ -77,7 +86,7 @@ public class RogueXMLHandler extends DefaultHandler{
             //addRoom(room);  //?
             roomBeingParsed = room;
 
-        } else if (qName.equalsIgnoreCase("Passages")) {
+        } else if (qName.equalsIgnoreCase("Passage")) {
             int room1 = Integer.parseInt(attributes.getValue("room1"));
             int room2 = Integer.parseInt(attributes.getValue("room2"));
             Passage passage = new Passage();
@@ -109,6 +118,14 @@ public class RogueXMLHandler extends DefaultHandler{
         } else if (qName.equalsIgnoreCase("CreatureAction")) {
             String name = attributes.getValue("name");
             String type = attributes.getValue("type");
+            CreatureAction creatureAction = new CreatureAction();
+            actionBeingParsed = creatureAction;
+
+        } else if (qName.equalsIgnoreCase("ItemAction")) {
+            String name = attributes.getValue("name");
+            String type = attributes.getValue("type");
+            ItemAction itemAction = new ItemAction();
+            actionBeingParsed = itemAction;
 
         } else if (qName.equalsIgnoreCase("Scroll")) {
             String name = attributes.getValue("name");
@@ -200,19 +217,19 @@ public class RogueXMLHandler extends DefaultHandler{
         } else if (itemBeingParsed != null) {
             //associate item with either creature or room
             if (bPosX) {
-                creatureBeingParsed.setPosX(Integer.parseInt(data.toString()));
+                itemBeingParsed.setPosX(Integer.parseInt(data.toString()));
                 bPosX = false;
             } else if (bPosY) {
-                creatureBeingParsed.setPosY(Integer.parseInt(data.toString()));
+                itemBeingParsed.setPosY(Integer.parseInt(data.toString()));
                 bPosY = false;
             } else if (bItemIntValue) {
-                creatureBeingParsed.setIntValue(Integer.parseInt(data.toString()));
+                itemBeingParsed.setIntValue(Integer.parseInt(data.toString()));
                 bItemIntValue = false;
             } else if (bVisible) {
                 if (Integer.parseInt(data.toString()) == 1) {
-                    creatureBeingParsed.setVisible();
+                    itemBeingParsed.setVisible();
                 } else {
-                    creatureBeingParsed.setInvisible();
+                    itemBeingParsed.setInvisible();
                 }
                 bVisible = false;
             }
@@ -308,6 +325,10 @@ public class RogueXMLHandler extends DefaultHandler{
             itemBeingParsed = null;
         } else if (qName.equalsIgnoreCase("Scroll")) {
             itemBeingParsed = null;
+        } else if (qName.equalsIgnoreCase("CreatureAction")) {
+            actionBeingParsed = null;
+        } else if (qName.equalsIgnoreCase("ItemAction")) {
+            actionBeingParsed = null;
         }
     }
 }
