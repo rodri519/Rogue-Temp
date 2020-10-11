@@ -1,3 +1,3 @@
-abstract class Structure extends Displayable{
+public abstract class Structure extends Displayable{
 
 }

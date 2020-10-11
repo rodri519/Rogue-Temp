@@ -1,4 +1,4 @@
-abstract class Displayable {
+public abstract class Displayable {
 
     public Displayable(){
         System.out.println("Displayable (Displayable)");

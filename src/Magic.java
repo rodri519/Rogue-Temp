@@ -1,2 +1,2 @@
-abstract class Magic extends Displayable{
+public abstract class Magic extends Displayable{
 }

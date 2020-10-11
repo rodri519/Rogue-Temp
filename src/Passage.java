@@ -1,4 +1,4 @@
-public class Passage {
+public class Passage extends Structure{
 
     public Passage(){
         System.out.println("Passage (Passage)");

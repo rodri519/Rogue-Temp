@@ -1,6 +1,6 @@
 public class Room extends Structure{
 
-    public Room(String string){
+    public Room(){
         System.out.println("Room (Room)");
     }
 

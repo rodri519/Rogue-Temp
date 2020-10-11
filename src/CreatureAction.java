@@ -1,6 +1,5 @@
 public class CreatureAction extends Action{
-
-    public void CreatureAction(Creature owner){
+    public CreatureAction(){
         System.out.println("CreatureAction (CreatureAction");
     }
 }

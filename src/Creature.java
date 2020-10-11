@@ -1,4 +1,4 @@
-abstract class Creature extends Displayable{
+public abstract class Creature extends Displayable{
 
     public Creature(){
         System.out.println("Creature: ");

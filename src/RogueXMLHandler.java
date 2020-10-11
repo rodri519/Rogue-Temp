@@ -1,13 +1,17 @@
-package Step1;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RogueXMLHandler extends DefaultHandler{
     private StringBuilder data = null;
 
-    private Room[] rooms;
-    private Passage[] passages;
+    private static final int DEBUG = 1;
+    private static final String CLASSID = "StudentXMLHandler";
+
+    //private Room[] rooms;
+    //private Passage[] passages;
     private Dungeon dungeon;
     private ObjectDisplayGrid objectDisplayGrid;
     private String name;
@@ -16,7 +20,12 @@ public class RogueXMLHandler extends DefaultHandler{
     private int topHeight;
     private int bottomHeight;
 
-    private Structure structureBeingParsed = null;
+    //dungeon = new Dungeon();
+    List<Room> rooms = new ArrayList<Room>();
+    List<Passage> passages = new ArrayList<Passage>();
+
+    private Room roomBeingParsed = null;
+    private Passage passageBeingParsed = null;
     private Creature creatureBeingParsed = null;
     private Item itemBeingParsed = null;
     private Action actionBeingParsed = null;
@@ -35,10 +44,18 @@ public class RogueXMLHandler extends DefaultHandler{
     private boolean bMaxHit = false;
     private boolean bActionMessage = false;
 
+    private void addRoom(Room room) {
+        rooms.add(room);
+    }
+    private void addPassage(Passage passage) {
+        passages.add(passage);
+    }
+
+
     public RogueXMLHandler() {
     }
 
-    //@Override
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
         if (qName.equalsIgnoreCase("Dungeon")) {
@@ -54,10 +71,11 @@ public class RogueXMLHandler extends DefaultHandler{
             //anything in here?? passages = new Passage[];
         } else if (qName.equalsIgnoreCase("Room")) {
             int r = Integer.parseInt(attributes.getValue("room"));
-            Room room = new Room(r); //string?
+            Room room = new Room();
+            room.setID(r);
 
             //addRoom(room);  //?
-            structureBeingParsed = room;
+            roomBeingParsed = room;
 
         } else if (qName.equalsIgnoreCase("Passages")) {
             int room1 = Integer.parseInt(attributes.getValue("room1"));
@@ -65,7 +83,7 @@ public class RogueXMLHandler extends DefaultHandler{
             Passage passage = new Passage();
             passage.setID(room1, room2);
             //addPassage(passage);
-            structureBeingParsed = passage;
+            passageBeingParsed = passage;
 
         } else if (qName.equalsIgnoreCase("Monster")) {
             String name = attributes.getValue("name");
@@ -155,7 +173,16 @@ public class RogueXMLHandler extends DefaultHandler{
         data = new StringBuilder();
     }
 
-    //@Override
+    @Override
+    public void characters(char ch[], int start, int length) throws SAXException {
+        data.append(new String(ch, start, length));
+        if (DEBUG > 1) {
+            System.out.println(CLASSID + ".characters: " + new String(ch, start, length));
+            System.out.flush();
+        }
+    }
+
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (actionBeingParsed != null) {
             //associate action with either creature or item
@@ -178,6 +205,9 @@ public class RogueXMLHandler extends DefaultHandler{
             } else if (bPosY) {
                 creatureBeingParsed.setPosY(Integer.parseInt(data.toString()));
                 bPosY = false;
+            } else if (bItemIntValue) {
+                creatureBeingParsed.setIntValue(Integer.parseInt(data.toString()));
+                bItemIntValue = false;
             } else if (bVisible) {
                 if (Integer.parseInt(data.toString()) == 1) {
                     creatureBeingParsed.setVisible();
@@ -204,7 +234,7 @@ public class RogueXMLHandler extends DefaultHandler{
                 creatureBeingParsed.setHP(Integer.parseInt(data.toString()));
                 bHp = false;
             } else if (bHpMoves) {
-                creatureBeingParsed.setHpMoves(Integer.parseInt(data.toString()));
+                creatureBeingParsed.setHpMove(Integer.parseInt(data.toString()));
                 bHpMoves = false;
             } else if (bMaxHit) {
                 creatureBeingParsed.setMaxHit(Integer.parseInt(data.toString()));
@@ -214,24 +244,45 @@ public class RogueXMLHandler extends DefaultHandler{
                 bType = false;
             }
             //<CreatureAction?
-        } else if (structureBeingParsed != null) {
+        } else if (roomBeingParsed != null) {
             if (bPosX) {
-                structureBeingParsed.setPosX(Integer.parseInt(data.toString()));
+                roomBeingParsed.setPosX(Integer.parseInt(data.toString()));
                 bPosX = false;
             } else if (bPosY) {
-                structureBeingParsed.setPosY(Integer.parseInt(data.toString()));
+                roomBeingParsed.setPosY(Integer.parseInt(data.toString()));
                 bPosY = false;
             } else if (bWidth) {
-                structureBeingParsed.setWidth(Integer.parseInt(data.toString()));
+                roomBeingParsed.setWidth(Integer.parseInt(data.toString()));
                 bWidth = false;
             } else if (bHeight) {
-                structureBeingParsed.setHeight(Integer.parseInt(data.toString()));
+                roomBeingParsed.setHeight(Integer.parseInt(data.toString()));
                 bHeight = false;
             } else if (bVisible) {
                 if (Integer.parseInt(data.toString()) == 1) {
-                    structureBeingParsed.setVisible();
+                    roomBeingParsed.setVisible();
                 } else {
-                    structureBeingParsed.setInvisible();
+                    roomBeingParsed.setInvisible();
+                }
+                bVisible = false;
+            }
+        } else if (passageBeingParsed != null) {
+            if (bPosX) {
+                passageBeingParsed.setPosX(Integer.parseInt(data.toString()));
+                bPosX = false;
+            } else if (bPosY) {
+                passageBeingParsed.setPosY(Integer.parseInt(data.toString()));
+                bPosY = false;
+            } else if (bWidth) {
+                passageBeingParsed.setWidth(Integer.parseInt(data.toString()));
+                bWidth = false;
+            } else if (bHeight) {
+                passageBeingParsed.setHeight(Integer.parseInt(data.toString()));
+                bHeight = false;
+            } else if (bVisible) {
+                if (Integer.parseInt(data.toString()) == 1) {
+                    passageBeingParsed.setVisible();
+                } else {
+                    passageBeingParsed.setInvisible();
                 }
                 bVisible = false;
             }
@@ -242,11 +293,11 @@ public class RogueXMLHandler extends DefaultHandler{
         if (qName.equalsIgnoreCase("Students")) {
 
         } else if (qName.equalsIgnoreCase("Room")) {
-            dungeon.addRoom(structureBeingParsed);
-            structureBeingParsed = null;
+            addRoom(roomBeingParsed);
+            roomBeingParsed = null;
         } else if (qName.equalsIgnoreCase("Passage")) {
-            dungeon.addPassage(structureBeingParsed);
-            structureBeingParsed = null;
+            addPassage(passageBeingParsed);
+            passageBeingParsed = null;
         } else if (qName.equalsIgnoreCase("Player")) {
             creatureBeingParsed = null;
         } else if (qName.equalsIgnoreCase("Monster")) {

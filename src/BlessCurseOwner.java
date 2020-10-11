@@ -1,6 +1,5 @@
 public class BlessCurseOwner extends ItemAction{
-
-    BlessCurseOwner(Creature owner){
+    public BlessCurseOwner(Creature owner){
         System.out.println("BlessCurseOwner (BlessCurseOwner)");
     }
 }
