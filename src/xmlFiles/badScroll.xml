@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dungeon name="scroll" width="80" topHeight="2" gameHeight="34" bottomHeight="4">
+    <Rooms>
+        <Room room="1">
+            <visible>1</visible>
+            <posX>0</posX>
+            <posY>0</posY>
+            <width>6</width>
+            <height>5</height>
+            <Scroll name="Scroll" room="1" serial="1">
+                <visible>1</visible>
+                <posX>3</posX>
+                <posY>3</posY>
+                <ItemAction name="BlessArmor" type="item">
+                    <actionMessage>You have picked up a scroll of weakened armor</actionMessage>
+                    <actionIntValue>-5</actionIntValue>
+                    <actionCharValue>w</actionCharValue>
+                </ItemAction>
+            </Scroll>
+            <Player name="Player" room="1" serial="2">
+                <visible>1</visible>
+                <posX>1</posX>
+                <posY>2</posY>
+                <hp>20</hp>
+                <hpMoves>5</hpMoves>
+                <maxhit>6</maxhit>
+                <CreatureAction name="Remove" type="death">
+                </CreatureAction>
+                <CreatureAction name="YouWin" type="death">
+                    <actionMessage>You have killed me!  The game is over!</actionMessage>
+                    <actionIntValue>5</actionIntValue>
+                </CreatureAction>
+                <Sword name="+10 Sword" room="1" serial="3">                                                                                 
+                    <visible>1</visible>                                                                                                    
+                    <posX>5</posX>                                                                                                          
+                    <posY>2</posY>                                                                                                          
+                    <ItemIntValue>10</ItemIntValue>                                                                                     
+                </Sword>  
+            </Player>
+        </Room>
+    </Rooms>
+</Dungeon>

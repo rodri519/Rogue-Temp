@@ -18,7 +18,7 @@ public class Test {
         case 1:
            // note that the relative file path may depend on what IDE you are
 	   // using.  This worked for NetBeans.
-           fileName = "src/xmlFiles/" + args[0];
+           fileName = "xmlFiles/" + args[0];
            break;
         default:
            System.out.println("java Test <xmlfilename>");
@@ -36,17 +36,17 @@ public class Test {
 	    // just copy this
             SAXParser saxParser = saxParserFactory.newSAXParser();
 	    // just copy this
-            StudentXMLHandler handler = new StudentXMLHandler();
+            RogueXMLHandler handler = new RogueXMLHandler();
 	    // just copy this.  This will parse the xml file given by fileName
             saxParser.parse(new File(fileName), handler);
 	    // This will change depending on what kind of XML we are parsing
-            Student[ ] students = handler.getStudents();
+            //Student[ ] students = handler.getStudents();
 	    // print out all of the students.  This will change depending on 
 	    // what kind of XML we are parsing
-            for (Student student : students) {
+            /*for (Student student : students) {
                 System.out.println(student);
             }
-            /*
+
              * the above is a different form of 
              for (int i = 0; i < students.length; i++) {
                 System.out.println(students[i]);
