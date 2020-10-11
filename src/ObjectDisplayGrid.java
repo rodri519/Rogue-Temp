@@ -1,5 +1,6 @@
 public class ObjectDisplayGrid {
 
+    public ObjectDisplayGrid(){}
     public void getObjectDisplayGrid(int gameHeight, int width, int topHeight){
         System.out.println("ObjectDisplayGrid (getObjectDisplayGrid)");
     }
