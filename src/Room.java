@@ -5,7 +5,7 @@ public class Room extends Structure{
     }
 
     public void setID(int room){
-        System.out.println("Room (setID)");
+        System.out.println("Room (setID)" + room);
     }
 
     public void setCreature(Creature Monster){

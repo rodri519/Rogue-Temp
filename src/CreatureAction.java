@@ -1,5 +1,5 @@
 public class CreatureAction extends Action{
-    public CreatureAction(){
-        System.out.println("CreatureAction (CreatureAction");
+    public CreatureAction(String name, String type){
+        System.out.println("CreatureAction (CreatureAction), name = " + name + ", type = " + type);
     }
 }

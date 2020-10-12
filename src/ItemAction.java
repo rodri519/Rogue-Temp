@@ -1,3 +1,3 @@
 public class ItemAction extends Action{
-    public ItemAction(){ System.out.println("ItemAction (ItemAction)"); }
+    public ItemAction(String name, String type){ System.out.println("ItemAction (ItemAction), name = " + name + ", type = " + type); }
 }

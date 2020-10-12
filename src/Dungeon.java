@@ -1,6 +1,8 @@
 public class Dungeon {
-
-    public Dungeon(){}
+    //static variable declarations?
+    public Dungeon(String name, int width, int gameHeight){
+        System.out.println("Dungeon (Dungeon), name = " + name + ", width = " + width + ", gameHeight = " + gameHeight);
+    }
     public void getDungeon(String name, int width, int gameHeight){
         System.out.println("Dungeon (getDungeon)");
     }

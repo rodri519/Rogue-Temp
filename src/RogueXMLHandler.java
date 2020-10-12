@@ -4,11 +4,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-//Need:
-//constructor for dungeon - singleton/static?
-//constructor for player
-//creature print statement creature:
-//player -> setHpMove:
 //clean up code
 //dungeon adding rooms/passages
 //gray variables
@@ -20,7 +15,6 @@ public class RogueXMLHandler extends DefaultHandler{
     private static final int DEBUG = 1;
     private static final String CLASSID = "StudentXMLHandler";
 
-
     private Dungeon dungeon;
     private ObjectDisplayGrid objectDisplayGrid;
     private String name;
@@ -29,7 +23,6 @@ public class RogueXMLHandler extends DefaultHandler{
     private int topHeight;
     private int bottomHeight;
 
-    //dungeon = new Dungeon();
     List<Room> rooms = new ArrayList<Room>();
     List<Passage> passages = new ArrayList<Passage>();
 
@@ -72,7 +65,8 @@ public class RogueXMLHandler extends DefaultHandler{
             topHeight = Integer.parseInt(attributes.getValue("topHeight"));
             gameHeight = Integer.parseInt(attributes.getValue("gameHeight"));
             bottomHeight = Integer.parseInt(attributes.getValue("bottomHeight"));
-            //construct dungeon and/or objectdisplaygrid??
+            objectDisplayGrid = new ObjectDisplayGrid(gameHeight, width, topHeight, bottomHeight);
+            dungeon = new Dungeon(name, width, gameHeight);
 
         } else if (qName.equalsIgnoreCase("Rooms")) {
             //anything in here?? rooms = new Room[];
@@ -82,18 +76,15 @@ public class RogueXMLHandler extends DefaultHandler{
             int r = Integer.parseInt(attributes.getValue("room"));
             Room room = new Room();
             room.setID(r);
-
-            //addRoom(room);  //?
+            addRoom(room);
             roomBeingParsed = room;
-
         } else if (qName.equalsIgnoreCase("Passage")) {
             int room1 = Integer.parseInt(attributes.getValue("room1"));
             int room2 = Integer.parseInt(attributes.getValue("room2"));
             Passage passage = new Passage();
             passage.setID(room1, room2);
-            //addPassage(passage);
+            addPassage(passage);
             passageBeingParsed = passage;
-
         } else if (qName.equalsIgnoreCase("Monster")) {
             String name = attributes.getValue("name");
             int room = Integer.parseInt(attributes.getValue("room"));
@@ -109,22 +100,19 @@ public class RogueXMLHandler extends DefaultHandler{
             int room = Integer.parseInt(attributes.getValue("room"));
             int serial = Integer.parseInt(attributes.getValue("serial"));
             //set player to room?
-            //what to do with name, room, serial
             Player player = new Player();
-
+            player.setName(name);
+            player.setID(room, serial);
             creatureBeingParsed = player;
-
-
         } else if (qName.equalsIgnoreCase("CreatureAction")) {
             String name = attributes.getValue("name");
             String type = attributes.getValue("type");
-            CreatureAction creatureAction = new CreatureAction();
+            CreatureAction creatureAction = new CreatureAction(name, type);
             actionBeingParsed = creatureAction;
-
         } else if (qName.equalsIgnoreCase("ItemAction")) {
             String name = attributes.getValue("name");
             String type = attributes.getValue("type");
-            ItemAction itemAction = new ItemAction();
+            ItemAction itemAction = new ItemAction(name, type);
             actionBeingParsed = itemAction;
 
         } else if (qName.equalsIgnoreCase("Scroll")) {
@@ -154,9 +142,7 @@ public class RogueXMLHandler extends DefaultHandler{
             sword.setOwner(creatureBeingParsed);
             itemBeingParsed = sword;
 
-        }
-
-        else if (qName.equalsIgnoreCase("posX")) {
+        } else if (qName.equalsIgnoreCase("posX")) {
             bPosX = true;
         } else if (qName.equalsIgnoreCase("posY")) {
             bPosY = true;
@@ -182,9 +168,7 @@ public class RogueXMLHandler extends DefaultHandler{
             bMaxHit = true;
         } else if (qName.equalsIgnoreCase("actionMessage")) {
             bActionMessage = true;
-        }
-
-        else {
+        } else {
             System.out.println("Unknown qname: " + qName);
         }
         data = new StringBuilder();
@@ -304,8 +288,6 @@ public class RogueXMLHandler extends DefaultHandler{
                 bVisible = false;
             }
         }
-
-
         //what to do if rooms passages dungeon
         if (qName.equalsIgnoreCase("Students")) {
 
