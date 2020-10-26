@@ -1,6 +1,7 @@
 public class Hallucinate extends ItemAction{
-
-    public Hallucinate(Creature owner) {
+    private Creature owner;
+    public Hallucinate(Creature _owner) {
+        owner = _owner;
         System.out.println("Hallucinate (Hallucinate)");
     }
 }

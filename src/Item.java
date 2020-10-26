@@ -1,6 +1,7 @@
 public abstract class Item extends Displayable{
-
-    public void setOwner(Creature owner){
+    private Creature owner;
+    public void setOwner(Creature _owner){
+        owner = _owner;
         System.out.println("Item (setOwner)");
     }
 }

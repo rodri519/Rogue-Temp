@@ -1,22 +1,29 @@
 public abstract class Creature extends Displayable{
-
+    private int h;
+    private int hpm;
+    private CreatureAction da;
+    private CreatureAction ha;
     public Creature(){
         System.out.println("Creature (Creature)");
     }
 
-    public void setHp(int h){
+    public void setHp(int _h){
+        h = _h;
         System.out.println("Creature (setHp) " + h);
     }
 
-    public void setHpMove(int hpm){
+    public void setHpMove(int _hpm){
+        hpm = _hpm;
         System.out.println("Creature (setHpMove) " + hpm);
     }
 
-    public void setDeathAction(CreatureAction da){
+    public void setDeathAction(CreatureAction _da){
+        da = _da;
         System.out.println("Creature (setDeathAction) " + da);
     }
 
-    public void setHitAction(CreatureAction ha){
+    public void setHitAction(CreatureAction _ha){
+        ha = _ha;
         System.out.println("Creature (setHitAction) " + ha);
     }
 

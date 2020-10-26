@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dungeon name="Death" width="80" topHeight="2" gameHeight="34" bottomHeight="4">
+    <Rooms>
+        <Room room="1">
+            <visible>1</visible>
+            <posX>0</posX>
+            <posY>0</posY>
+            <width>8</width>
+            <height>5</height>
+            <Monster name="Troll" room="1" serial="1">
+                <visible>1</visible>
+                <posX>1</posX>
+                <posY>1</posY>
+                <type>T</type>
+                <hp>0</hp>
+                <maxhit>0</maxhit>
+            </Monster>
+            <Monster name="Hobgoblin" room="1" serial="2">
+                <visible>1</visible>
+                <posX>2</posX>
+                <posY>1</posY>
+                <type>H</type>
+                <hp>0</hp>
+                <maxhit>0</maxhit>
+            </Monster>
+            <Monster name="S" room="1" serial="3">
+                <visible>1</visible>
+                <posX>3</posX>
+                <posY>1</posY>
+                <type>S</type>
+                <hp>0</hp>
+                <maxhit>0</maxhit>
+            </Monster>
+            <Monster name="Troll" room="1" serial="4">
+                <visible>1</visible>
+                <posX>4</posX>
+                <posY>3</posY>
+                <type>T</type>
+                <hp>0</hp>
+                <maxhit>0</maxhit>
+            </Monster>
+            <Monster name="Hobgoblin" room="1" serial="5">
+                <visible>1</visible>
+                <posX>5</posX>
+                <posY>3</posY>
+                <type>H</type>
+                <hp>0</hp>
+                <maxhit>0</maxhit>
+            </Monster>
+            <Monster name="S" room="1" serial="6">
+                <visible>1</visible>
+                <posX>6</posX>
+                <posY>3</posY>
+                <type>S</type>
+                <hp>0</hp>
+                <maxhit>0</maxhit>
+            </Monster>
+            <Player name="Player" room="3" serial="7">
+                <visible>1</visible>
+                <posX>2</posX>
+                <posY>3</posY>
+                <hp>1</hp>
+                <hpMoves>5</hpMoves>
+                <maxhit>6</maxhit>
+                <CreatureAction name="ChangeDisplayedType" type="death">
+                    <actionCharValue>?</actionCharValue>
+                </CreatureAction>
+                <CreatureAction name="UpdateDisplay" type="death">
+                </CreatureAction>
+                <CreatureAction name="EndGame" type="death">
+                    <actionMessage>Player is killed!</actionMessage>
+                </CreatureAction>
+            </Player>
+            <Scroll name="Scroll" room="1" serial="8">
+                <visible>1</visible>
+                <posX>1</posX>
+                <posY>3</posY>
+                <ItemAction name="Hallucinate" type="item">
+                    <actionMessage>You have picked up a scroll of hallucination!</actionMessage>
+                    <actionIntValue>5</actionIntValue>
+                </ItemAction>
+            </Scroll>
+        </Room>
+    </Rooms>
+</Dungeon>

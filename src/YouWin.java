@@ -1,6 +1,9 @@
 public class YouWin extends CreatureAction{
-
-    public YouWin(String name, Creature owner){
+    private String name;
+    private Creature owner;
+    public YouWin(String _name, Creature _owner){
+        name = _name;
+        owner = _owner;
         System.out.println("YouWin (YouWin)");
     }
 }
