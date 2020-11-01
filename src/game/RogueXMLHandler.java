@@ -24,6 +24,7 @@ public class RogueXMLHandler extends DefaultHandler{
     public int gameHeight;
     public int topHeight;
     public int bottomHeight;
+    public Player player;
 
     public List<Room> rooms = new ArrayList<Room>();
     public List<Passage> passages = new ArrayList<Passage>();
@@ -78,14 +79,12 @@ public class RogueXMLHandler extends DefaultHandler{
             int r = Integer.parseInt(attributes.getValue("room"));
             Room room = new Room();
             room.setID(r);
-            addRoom(room);
             roomBeingParsed = room;
         } else if (qName.equalsIgnoreCase("Passage")) {
             int room1 = Integer.parseInt(attributes.getValue("room1"));
             int room2 = Integer.parseInt(attributes.getValue("room2"));
             Passage passage = new Passage();
             passage.setID(room1, room2);
-            addPassage(passage);
             passageBeingParsed = passage;
         } else if (qName.equalsIgnoreCase("Monster")) {
             String name = attributes.getValue("name");
@@ -95,18 +94,18 @@ public class RogueXMLHandler extends DefaultHandler{
             monster.setName(name);
             monster.setID(room, serial);
             creatureBeingParsed = monster;
-            roomBeingParsed.setCreature(monster);
+            roomBeingParsed.setMonster(monster);
 
         } else if (qName.equalsIgnoreCase("Player")) {
             String name = attributes.getValue("name");
             int room = Integer.parseInt(attributes.getValue("room"));
             int serial = Integer.parseInt(attributes.getValue("serial"));
-            Player player = new Player();
+            player = new Player();
             player.setName(name);
             player.setChar('@');
             player.setID(room, serial);
             creatureBeingParsed = player;
-            roomBeingParsed.setCreature(player);
+            roomBeingParsed.setPlayer(player);
         } else if (qName.equalsIgnoreCase("CreatureAction")) {
             String name = attributes.getValue("name");
             String type = attributes.getValue("type");
@@ -245,7 +244,7 @@ public class RogueXMLHandler extends DefaultHandler{
                 }
                 bVisible = false;
             } else if (bHp) {
-                creatureBeingParsed.setHP(Integer.parseInt(data.toString()));
+                creatureBeingParsed.setHp(Integer.parseInt(data.toString()));
                 bHp = false;
             } else if (bHpMoves) {
                 creatureBeingParsed.setHpMove(Integer.parseInt(data.toString()));

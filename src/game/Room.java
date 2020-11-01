@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Room extends Structure{
-    public List<Creature> creatures = new ArrayList<Creature>();
+    public List<Monster> monsters = new ArrayList<Monster>();
     public List<Item> items = new ArrayList<Item>();
+    public Player player;
 
 
     public Room(){
@@ -16,9 +17,14 @@ public class Room extends Structure{
         System.out.println("Room (setID)" + room);
     }
 
-    public void setCreature(Creature creature){
+    public void setMonster(Monster monster){
         System.out.println("Room (setCreature)");
-        creatures.add(creature);
+        monsters.add(monster);
+    }
+
+    public void setPlayer(Player _player){
+        System.out.println("Room (setCreature)");
+        player = _player;
     }
 
     public void setItem(Item item){

@@ -7,7 +7,6 @@ public abstract class Displayable {
     public int visible;
     public int maxHit;
     public int hpMove;
-    public int hp;
     public char type;
     public int intValue;
     public int posX;
@@ -40,11 +39,6 @@ public abstract class Displayable {
     public void setHpMove(int _hpMoves){
         hpMove = _hpMoves;
         System.out.println("Displayable (setHpMove)" + hpMove);
-    }
-
-    public void setHP(int _Hp){
-        hp = _Hp;
-        System.out.println("Displayable (setHP)" + hp);
     }
 
     public void setType(char _t){

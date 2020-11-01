@@ -18,7 +18,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
     @Override
     public void observerUpdate(char ch) {
         if (DEBUG > 0) {
-            System.out.println(CLASSID + ".observerUpdate receiving character " + ch);
+            //System.out.println(CLASSID + ".observerUpdate receiving character " + ch);
         }
         inputQueue.add(ch);
     }
@@ -45,11 +45,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                 if (DEBUG > 1) {
                     System.out.println(CLASSID + ".processInput peek is " + ch);
                 }
-                if (ch == 'X') {
+                /*if (ch == 'X') {
                     System.out.println("got an X, ending input checking");
                     return false;
-                } else {
-                    System.out.println("character " + ch + " entered on the keyboard");
+                } */else {
+                    //System.out.println("character " + ch + " entered on the keyboard");
+                    System.out.println(ch);
                 }
             }
         }

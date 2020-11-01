@@ -14,8 +14,8 @@
                <maxhit>10</maxhit>
            </Monster>
            <Monster name="Snake" room="1" serial="3">
-               <posX>6</posX>
-               <posY>7</posY>
+               <posX>5</posX>
+               <posY>5</posY>
                <type>S</type>
                <hp>2</hp>
                <maxhit>1</maxhit>
@@ -34,7 +34,7 @@
        </Room>
        <Room room="2">
            <posX>20</posX>
-           <posY>30</posY>
+           <posY>28</posY>
            <width>10</width>
            <height>12</height>
            <Monster name="Troll" room="2" serial="1">
