@@ -19,7 +19,6 @@ public class Rogue implements Runnable {
 
     @Override
     public void run() {
-        //displayGrid.fireUp();
         displayGrid.initializeDisplay();
     }
     public static void main(String[] args) throws Exception {
