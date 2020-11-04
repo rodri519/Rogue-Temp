@@ -18,6 +18,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private Char[][] objectGrid = null;
     private Char[][] finalGrid = null;
     private Char[][] bottomGrid = null;
+    private Char[][] topGrid = null;
     private int[] playerCoords = null;
     private List<InputObserver> inputObservers = null;
     public List<Room> rooms = new ArrayList<Room>();
@@ -57,7 +58,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 r.player = null;
             }
         }
-
+        resetBottom();
         setObjectGrid();
         initializeDisplay();
         super.add(terminal);
@@ -180,16 +181,35 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private void displayAttack(int attack, int defend) {
         //attack is the damage the player does to monster, defend is damage monster does to player
         //temporary: (these messages should be displayed on the grid using bottomGrid
+        String monHit = "The monster hit you for " + defend + " hitpoints!";
+        String playHit = "You hit the monster for " + attack + " hitpoints!";
+
+        for (int i = 0; i < monHit.length(); i++){
+            bottomGrid[i][0] = new Char(monHit.charAt(i));
+        }
+        for (int i = 0; i < playHit.length(); i++){
+            bottomGrid[i][1] = new Char(playHit.charAt(i));
+        }
         System.out.println("Damage by monster on player: " + defend);
         System.out.println("Damage by player on monster: " + attack);
     }
 
     private void resetBottom() {
         //set all Chars of bottomGrid to ' '
+        for (int i = 0; i < width; i++) {
+            for(int j = 0; j < bottomHeight; j++)
+            bottomGrid[i][j] = new Char(' ');
+        }
     }
 
     private void displayPack() {
         //display contents of pack in bottom grid
+        for (Item item : player.pack) {
+            String str = item.serial + " - " + item.name + " ";
+            for (int i = 0; i < str.length(); i++) {
+                bottomGrid[i][player.pack.indexOf(item)] = new Char(str.charAt(i));
+            }
+        }
     }
 
     private void gameOver() {
@@ -329,9 +349,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 addObjectToDisplay(objectGrid[i][j], i, j + topHeight);
             }
         }
-        /*
-        similar nested for loop for bottomGrid
-         */
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < bottomHeight; j++){
+                addObjectToDisplay(bottomGrid[i][j], i, j + topHeight + gameHeight);
+            }
+        }
         terminal.repaint();
     }
 

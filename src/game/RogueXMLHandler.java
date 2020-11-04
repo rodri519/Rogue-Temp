@@ -121,7 +121,8 @@ public class RogueXMLHandler extends DefaultHandler{
             String name = attributes.getValue("name");
             int room = Integer.parseInt(attributes.getValue("room"));
             int serial = Integer.parseInt(attributes.getValue("serial"));
-            Scroll scroll = new Scroll(name);
+            Scroll scroll = new Scroll();
+            scroll.setName(name);
             scroll.setID(room, serial);
             scroll.setChar('?');
             scroll.setOwner(creatureBeingParsed);
@@ -134,7 +135,8 @@ public class RogueXMLHandler extends DefaultHandler{
             String name = attributes.getValue("name");
             int room = Integer.parseInt(attributes.getValue("room"));
             int serial = Integer.parseInt(attributes.getValue("serial"));
-            Armor armor = new Armor(name);
+            Armor armor = new Armor();
+            armor.setName(name);
             armor.setID(room, serial);
             armor.setChar(']');
             armor.setOwner(creatureBeingParsed);
@@ -146,7 +148,8 @@ public class RogueXMLHandler extends DefaultHandler{
             String name = attributes.getValue("name");
             int room = Integer.parseInt(attributes.getValue("room"));
             int serial = Integer.parseInt(attributes.getValue("serial"));
-            Sword sword = new Sword(name);
+            Sword sword = new Sword();
+            sword.setName(name);
             sword.setID(room, serial);
             sword.setChar(')');
             sword.setOwner(creatureBeingParsed);

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dungeon name="Death" width="80" topHeight="2" gameHeight="34" bottomHeight="4">
+    <Rooms>
+        <Room room="1">
+            <visible>1</visible>
+            <posX>0</posX>
+            <posY>0</posY>
+            <width>6</width>
+            <height>5</height>
+            <Player name="Player" room="1" serial="1">
+                <visible>1</visible>
+                <posX>1</posX>
+                <posY>1</posY>
+                <hp>1</hp>
+                <hpMoves>5</hpMoves>
+                <maxhit>6</maxhit>
+                <Armor name="+10 Armor" room="1" serial="2">
+                    <visible>1</visible>
+                    <ItemIntValue>2</ItemIntValue>
+                </Armor>
+                <CreatureAction name="ChangeDisplayedType" type="death">
+                    <actionCharValue>?</actionCharValue>
+                </CreatureAction>
+                <CreatureAction name="UpdateDisplay" type="death">
+                </CreatureAction>
+                <CreatureAction name="EndGame" type="death">
+                    <actionMessage>Player is killed!</actionMessage>
+                </CreatureAction>
+            </Player>
+            <Armor name="+10 Armor" room="1" serial="3">
+                <visible>1</visible>
+                <posX>3</posX>
+                <posY>3</posY>
+                <ItemIntValue>10</ItemIntValue>
+            </Armor>
+        </Room>
+    </Rooms>
+</Dungeon>
