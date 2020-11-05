@@ -18,10 +18,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private Char[][] objectGrid = null;
     private Char[][] finalGrid = null;
     private Char[][] bottomGrid = null;
-    private Char[][] topGrid = null;
+    private Char[] topGrid = null;
     private int[] playerCoords = null;
     private List<InputObserver> inputObservers = null;
     public List<Room> rooms = new ArrayList<Room>();
+    public List<Char> monsterChars = new ArrayList<Char>();
     public List<Passage> passages = new ArrayList<Passage>();
     public List<Item> droppedItems = new ArrayList<Item>();
     private Player player;
@@ -49,6 +50,8 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         finalGrid = new Char[width][height];
         playerCoords = new int[2];
         player = handler.player;
+        topGrid = new Char[width];
+        setTopGrid();
 
         //find player location
         for (Room r : rooms) {
@@ -94,6 +97,9 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             }
             for (Monster monster : r.monsters) {
                 objectGrid[r.posX + monster.posX][r.posY + monster.posY] = monster.aChar;
+                if (monsterChars.contains(monster.aChar) != true) {
+                    monsterChars.add(monster.aChar);
+                }
             }
             for (Item item : r.items) {
                 objectGrid[r.posX + item.posX][r.posY + item.posY] = item.aChar;
@@ -149,49 +155,75 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         objectGrid[playerCoords[0]][playerCoords[1]] = player.aChar;
     }
 
-    private void checkForMonster() {
-        //check if moved to monster
-        for (Room r : rooms) {
-            for (Monster m : r.monsters) {
-                if (playerCoords[0] == m.posX + r.posX && playerCoords[1] == m.posY + r.posY) {
-                    attackMonster(m);
-                }
+    private void setTopGrid(){
+        String hpRemaining = "GAME OVER";
+        if (player.hp > 0) {
+            hpRemaining = "Player HP: " + player.hp;
+        }
+        for (int i = 0; i < width; i++){
+            if (i < hpRemaining.length()) {
+                topGrid[i] = new Char(hpRemaining.charAt(i));
+            }
+            else {
+                topGrid[i] = new Char(' ');
             }
         }
     }
 
-    private void attackMonster(Monster monster) {
+    private void checkForMonster() {
+        //check if moved to monster
+        Monster temp = null;
+        for (Room r : rooms) {
+            for (Monster m : r.monsters) {
+                if (playerCoords[0] == m.posX + r.posX && playerCoords[1] == m.posY + r.posY) {
+                    temp = m;
+                }
+            }
+            if (temp != null) {
+                attackMonster(r, temp);
+                temp = null;
+            }
+        }
+    }
+
+    private void attackMonster(Room room, Monster monster) {
         Random rand = new Random();
         int attack = rand.nextInt(player.maxHit + 1);
-        int defend = rand.nextInt(monster.maxHit + 1);
         /*
         call function that updates bottom display with attack, defend
          */
         resetBottom();
-        displayAttack(attack, defend);
         monster.setHp(monster.hp - attack);
-        player.setHp(player.hp - defend);
-        if (player.hp < 0) {
-            //following according to description, but could be <=
-            gameOver();
+        if (monster.hp <= 0) {
+            room.monsters.remove(monster);
+            displayAttack(attack, -1);
         }
-        //possible function that involves killing off monster? not in docs
+        else {
+            int defend = rand.nextInt(monster.maxHit + 1);
+            player.setHp(player.hp - defend);
+            setTopGrid();
+            displayAttack(attack, defend);
+            if (player.hp <= 0) {
+                //following according to description, but could be <=
+                gameOver();
+            }
+        }
     }
 
     private void displayAttack(int attack, int defend) {
         //attack is the damage the player does to monster, defend is damage monster does to player
-        //temporary: (these messages should be displayed on the grid using bottomGrid
-        String monHit = "The monster hit you for " + defend + " hitpoints!";
+        String monHit = "";
+        if (defend != -1) {
+            monHit = "The monster hit you for " + defend + " hitpoints!";
+        }
         String playHit = "You hit the monster for " + attack + " hitpoints!";
 
         for (int i = 0; i < monHit.length(); i++){
-            bottomGrid[i][0] = new Char(monHit.charAt(i));
+            bottomGrid[i][1] = new Char(monHit.charAt(i));
         }
         for (int i = 0; i < playHit.length(); i++){
-            bottomGrid[i][1] = new Char(playHit.charAt(i));
+            bottomGrid[i][0] = new Char(playHit.charAt(i));
         }
-        System.out.println("Damage by monster on player: " + defend);
-        System.out.println("Damage by player on monster: " + attack);
     }
 
     private void resetBottom() {
@@ -266,28 +298,28 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         if (keypress.getKeyChar() == 'h'){
             playerCoords[0]--;
             checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ') {
+            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
                 playerCoords[0]++;
             }
         }
         else if (keypress.getKeyChar() == 'j'){
             playerCoords[1]++;
             checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ') {
+            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
                 playerCoords[1]--;
             }
         }
         else if (keypress.getKeyChar() == 'k'){
             playerCoords[1]--;
             checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ') {
+            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
                 playerCoords[1]++;
             }
         }
         else if (keypress.getKeyChar() == 'l'){
             playerCoords[0]++;
             checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ') {
+            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
                 playerCoords[0]--;
             }
         }
@@ -344,6 +376,9 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     }
 
     public final void initializeDisplay() {
+        for (int i = 0; i < width; i++){
+            addObjectToDisplay(topGrid[i], i, 0);
+        }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < gameHeight; j++) {
                 addObjectToDisplay(objectGrid[i][j], i, j + topHeight);
