@@ -23,7 +23,7 @@
                 <hp>0</hp>
                 <maxhit>0</maxhit>
             </Monster>
-            <Monster name="S" room="1" serial="3">
+            <Monster name="Snake" room="1" serial="3">
                 <visible>1</visible>
                 <posX>3</posX>
                 <posY>1</posY>
@@ -47,7 +47,7 @@
                 <hp>0</hp>
                 <maxhit>0</maxhit>
             </Monster>
-            <Monster name="S" room="1" serial="6">
+            <Monster name="Snake" room="1" serial="6">
                 <visible>1</visible>
                 <posX>6</posX>
                 <posY>3</posY>
@@ -63,7 +63,7 @@
                 <hpMoves>5</hpMoves>
                 <maxhit>6</maxhit>
                 <CreatureAction name="ChangeDisplayedType" type="death">
-                    <actionCharValue>?</actionCharValue>
+                    <actionCharValue>+</actionCharValue>
                 </CreatureAction>
                 <CreatureAction name="UpdateDisplay" type="death">
                 </CreatureAction>

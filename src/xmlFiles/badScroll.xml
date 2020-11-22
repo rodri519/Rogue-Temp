@@ -14,7 +14,7 @@
                 <ItemAction name="BlessArmor" type="item">
                     <actionMessage>You have picked up a scroll of weakened armor</actionMessage>
                     <actionIntValue>-5</actionIntValue>
-                    <actionCharValue>w</actionCharValue>
+                    <actionCharValue>a</actionCharValue>
                 </ItemAction>
             </Scroll>
             <Player name="Player" room="1" serial="2">
@@ -24,17 +24,23 @@
                 <hp>20</hp>
                 <hpMoves>5</hpMoves>
                 <maxhit>6</maxhit>
+                <Armor name="+5 Armor" room="1" serial="3">
+                    <visible>1</visible>
+                    <posX>1</posX>
+                    <posY>2</posY>
+                    <ItemIntValue>5</ItemIntValue>
+                </Armor>
                 <CreatureAction name="Remove" type="death">
                 </CreatureAction>
                 <CreatureAction name="YouWin" type="death">
                     <actionMessage>You have killed me!  The game is over!</actionMessage>
                     <actionIntValue>5</actionIntValue>
                 </CreatureAction>
-                <Sword name="+10 Sword" room="1" serial="3">                                                                                 
-                    <visible>1</visible>                                                                                                    
-                    <posX>5</posX>                                                                                                          
-                    <posY>2</posY>                                                                                                          
-                    <ItemIntValue>10</ItemIntValue>                                                                                     
+                <Sword name="+10 Sword" room="1" serial="3">
+                    <visible>1</visible>
+                    <posX>5</posX>
+                    <posY>2</posY>
+                    <ItemIntValue>10</ItemIntValue>
                 </Sword>  
             </Player>
         </Room>

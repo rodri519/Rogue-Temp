@@ -19,7 +19,7 @@
                     <ItemIntValue>2</ItemIntValue>
                 </Armor>
                 <CreatureAction name="ChangeDisplayedType" type="death">
-                    <actionCharValue>?</actionCharValue>
+                    <actionCharValue>+</actionCharValue>
                 </CreatureAction>
                 <CreatureAction name="UpdateDisplay" type="death">
                 </CreatureAction>

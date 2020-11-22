@@ -29,7 +29,7 @@
                 <hpMoves>5</hpMoves>
                 <maxhit>6</maxhit>
                 <CreatureAction name="ChangeDisplayedType" type="death">
-                    <actionCharValue>?</actionCharValue>
+                    <actionCharValue>+</actionCharValue>
                 </CreatureAction>
                 <CreatureAction name="UpdateDisplay" type="death">
                 </CreatureAction>
@@ -44,6 +44,7 @@
                 <ItemAction name="BlessArmor" type="item">
                     <actionMessage>You have picked up a scroll of weakened armor</actionMessage>
                     <actionIntValue>-5</actionIntValue>
+                    <actionCharValue>a</actionCharValue>
                 </ItemAction>
             </Scroll>
         </Room>
