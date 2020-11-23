@@ -31,6 +31,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private static int topHeight;
     private static int gameHeight;
     private static int bottomHeight;
+    private char lastChar;
 
     public void setTopMessageHeight(int topHeight){
         System.out.println("ObjectDisplayGrid (setTopMessageHeight)");
@@ -343,9 +344,32 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             resetBottom();
             displayPack();
         }
+        else if (keypress.getKeyChar() == 'r'){
+            //followed by integer
+            //read scroll in pack specified by that integer
+            //scroll removed from pack and vanishes from game
+            //item actions of scroll execute
+            //if item not scroll then display message
+        }
+        else if (keypress.getKeyChar() == 'T'){
+            //followed by integer
+            //wield sword in pack specified by that integer
+            //sword stays in pack while being wielded
+            //if item not sword then display message
+        }
+        else if (keypress.getKeyChar() == 'c'){
+            //remove current armor and place back in the pack
+            //if no armor on then display message
+        }
+        else if (keypress.getKeyChar() == 'w'){
+            //followed by integer
+            //wear armor in pack specified by that integer
+            //if item not armor then display message
+        }
         notifyInputObservers(keypress.getKeyChar());
         setObjectGrid();
         initializeDisplay();
+        lastChar = keypress.getKeyChar();
     }
 
     @Override
