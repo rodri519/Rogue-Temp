@@ -189,7 +189,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
 
     private void attackMonster(Room room, Monster monster) {
         Random rand = new Random();
-        int attack = rand.nextInt(player.maxHit + 1);
+        int damage = player.maxHit;
+        if (player.sword != null) {
+            damage = damage + player.sword.intValue;
+        }
+        int attack = rand.nextInt(damage + 1);
         /*
         call function that updates bottom display with attack, defend
          */
@@ -201,9 +205,18 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         }
         else {
             int defend = rand.nextInt(monster.maxHit + 1);
+            displayAttack(attack, defend);
+            if (player.armor != null) {
+                if (defend >= player.armor.hp) {
+                    defend -= player.armor.hp;
+                    player.armor = null;
+                }
+                else {
+                    player.armor.hp -= damage;
+                }
+            }
             player.setHp(player.hp - defend);
             setTopGrid();
-            displayAttack(attack, defend);
             if (player.hp <= 0) {
                 //following according to description, but could be <=
                 gameOver();
@@ -345,27 +358,118 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             displayPack();
         }
         else if (keypress.getKeyChar() == 'r'){
-            //followed by integer
-            //read scroll in pack specified by that integer
-            //scroll removed from pack and vanishes from game
             //item actions of scroll execute
-            //if item not scroll then display message
         }
         else if (keypress.getKeyChar() == 'T'){
-            //followed by integer
-            //wield sword in pack specified by that integer
-            //sword stays in pack while being wielded
-            //if item not sword then display message
-        }
-        else if (keypress.getKeyChar() == 'c'){
-            //remove current armor and place back in the pack
-            //if no armor on then display message
+            //modify player damage based on whether they are wielding sword
         }
         else if (keypress.getKeyChar() == 'w'){
-            //followed by integer
-            //wear armor in pack specified by that integer
-            //if item not armor then display message
+            //modify player hp based on whether they are wearing armor
         }
+        else if (keypress.getKeyChar() == 'c'){
+            if (player.armor == null) {
+                resetBottom();
+                String errorMessage = "Player is not currently wearing armor.";
+                for (int i = 0; i < errorMessage.length(); i++){
+                    bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                }
+            }
+            else {
+                player.pack.add(player.armor);
+                player.armor = null;
+            }
+            //if no armor on then display message
+        }
+        else if (keypress.getKeyChar() == '1' || keypress.getKeyChar() == '2' || keypress.getKeyChar() == '3' || keypress.getKeyChar() == '4' || keypress.getKeyChar() == '5' || keypress.getKeyChar() == '6' || keypress.getKeyChar() == '7' || keypress.getKeyChar() == '8' || keypress.getKeyChar() == '9') {
+            int index = Character.getNumericValue(keypress.getKeyChar()) - 1;
+            Item packItem = null;
+            if (lastChar == 'H') {
+                //ADD HELP COMMAND
+            }
+            else if (lastChar == 'w') {
+                try {
+                    packItem = player.pack.get(index);
+                }
+                catch(Exception ex) {
+                    resetBottom();
+                    String errorMessage = "Item does not exist.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                if (packItem == null || !(packItem instanceof Armor)) {
+                    resetBottom();
+                    String errorMessage = "Item is not wearable or does not exist.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                else if (player.armor != null) {
+                    resetBottom();
+                    String errorMessage = "Player is already wearing armor. Press 'c' to change.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                else {
+                    player.pack.remove(packItem);
+                    player.setArmor(packItem);
+                }
+            }
+            else if (lastChar == 'r') {
+                try {
+                    packItem = player.pack.get(index);
+                }
+                catch(Exception ex) {
+                    resetBottom();
+                    String errorMessage = "Item does not exist.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                if (packItem == null || !(packItem instanceof Scroll)) {
+                    resetBottom();
+                    String errorMessage = "Item is not readable or does not exist.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                else {
+                    //EXECUTE ACTIONS OF SCROLL
+                    player.pack.remove(packItem);
+                }
+            }
+            else if (lastChar == 'T') {
+                try {
+                    packItem = player.pack.get(index);
+                }
+                catch(Exception ex) {
+                    resetBottom();
+                    String errorMessage = "Item does not exist.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                if (packItem == null || !(packItem instanceof Sword)) {
+                    resetBottom();
+                    String errorMessage = "Item is not a weapon or does not exist.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                else if (player.sword != null) {
+                    resetBottom();
+                    String errorMessage = "Player is already wielding a sword. Drop it to wield a different one.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                else {
+                    player.setWeapon(packItem);
+                }
+            }
+        }
+
         notifyInputObservers(keypress.getKeyChar());
         setObjectGrid();
         initializeDisplay();

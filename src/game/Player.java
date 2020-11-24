@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Creature{
-    private Item sword;
-    private Item armor;
+    public Item sword;
+    public Item armor;
     public List<Item> pack = new ArrayList<Item>();
     public Player() {
         System.out.println("Player (Player)");

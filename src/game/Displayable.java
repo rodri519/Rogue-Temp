@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Displayable {
+    public int hp;
     public int visible;
     public int maxHit;
     public int hpMove;
@@ -39,6 +40,11 @@ public abstract class Displayable {
     public void setHpMove(int _hpMoves){
         hpMove = _hpMoves;
         System.out.println("Displayable (setHpMove)" + hpMove);
+    }
+
+    public void setHp(int _h){
+        hp = _h;
+        System.out.println("Creature (setHp) " + hp);
     }
 
     public void setType(char _t){
