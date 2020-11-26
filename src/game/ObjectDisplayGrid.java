@@ -578,6 +578,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                     player.setWeapon(packItem);
                 }
             }
+          
         }
         else if (keypress.getKeyChar() == '?'){
             //displays list of possible commands
@@ -598,13 +599,14 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             }
 
         }
-=======
+
 
         notifyInputObservers(keypress.getKeyChar());
         setObjectGrid();
         initializeDisplay();
         lastChar = keypress.getKeyChar();
     }
+
 
     @Override
     public void registerInputObserver(InputObserver observer) {
