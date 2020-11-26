@@ -279,10 +279,10 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             str = "Command l: Moves the player one spot to the right.";
         }
         else if (s == "k"){
-            str = "Command k: Moves the player one spot down.";
+            str = "Command k: Moves the player one spot up.";
         }
         else if (s == "j"){
-            str = "Command j: Moves the player one spot up.";
+            str = "Command j: Moves the player one spot down.";
         }
         else if (s == "i"){
             str = "Command i: Displays the contents of the pack.";
@@ -468,25 +468,47 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             }
         }
         else if (keypress.getKeyChar() == 'r'){
+            if (lastChar == 'H'){
+                displayCommandInfo("r");
+            }
+            else {
+
+            }
             //item actions of scroll execute
         }
         else if (keypress.getKeyChar() == 'T'){
+            if (lastChar == 'H'){
+                displayCommandInfo("T");
+            }
+            else{
+
+            }
             //modify player damage based on whether they are wielding sword
         }
         else if (keypress.getKeyChar() == 'w'){
+            if (lastChar == 'H'){
+                displayCommandInfo("h");
+            }
+            else{
+
+            }
             //modify player hp based on whether they are wearing armor
         }
         else if (keypress.getKeyChar() == 'c'){
-            if (player.armor == null) {
-                resetBottom();
-                String errorMessage = "Player is not currently wearing armor.";
-                for (int i = 0; i < errorMessage.length(); i++){
-                    bottomGrid[i][1] = new Char(errorMessage.charAt(i));
-                }
+            if (lastChar == 'H'){
+                displayCommandInfo("c");
             }
             else {
-                player.pack.add(player.armor);
-                player.armor = null;
+                if (player.armor == null) {
+                    resetBottom();
+                    String errorMessage = "Player is not currently wearing armor.";
+                    for (int i = 0; i < errorMessage.length(); i++) {
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                } else {
+                    player.pack.add(player.armor);
+                    player.armor = null;
+                }
             }
             //if no armor on then display message
         }
@@ -578,7 +600,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                     player.setWeapon(packItem);
                 }
             }
-          
+
         }
         else if (keypress.getKeyChar() == '?'){
             //displays list of possible commands
