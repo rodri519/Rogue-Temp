@@ -579,7 +579,6 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 }
             }
         }
-<<<<<<< HEAD
         else if (keypress.getKeyChar() == '?'){
             //displays list of possible commands
             if (lastChar == 'H'){
@@ -601,7 +600,6 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         }
 =======
 
->>>>>>> 2cd02de9dd375cc106b6d33c68a7898515a084d9
         notifyInputObservers(keypress.getKeyChar());
         setObjectGrid();
         initializeDisplay();
