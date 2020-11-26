@@ -6,8 +6,11 @@ import java.util.List;
 public class Player extends Creature{
     public Item sword;
     public Item armor;
+    public int totalMoves;
+    public Hallucinate hallucinate;
     public List<Item> pack = new ArrayList<Item>();
     public Player() {
+        totalMoves = 0;
         System.out.println("Player (Player)");
     }
 

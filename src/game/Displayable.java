@@ -7,7 +7,6 @@ public abstract class Displayable {
     public int hp;
     public int visible;
     public int maxHit;
-    public int hpMove;
     public char type;
     public int intValue;
     public int posX;
@@ -15,6 +14,7 @@ public abstract class Displayable {
     public int width;
     public int height;
     public Char aChar;
+    public List<Action> actions = new ArrayList<>();
     public List<Integer> xCoords = new ArrayList<>();
     public List<Integer> yCoords = new ArrayList<>();
 
@@ -27,6 +27,10 @@ public abstract class Displayable {
         System.out.println("Displayable (setInvisible)");
     }
 
+    public void addAction(Action _action) {
+        actions.add(_action);
+    }
+
     public void setVisible(){
         visible = 1;
         System.out.println("Displayable (setVisible)");
@@ -35,11 +39,6 @@ public abstract class Displayable {
     public void setMaxHit(int _maxHit){
         maxHit = _maxHit;
         System.out.println("Displayable (setMaxHit)" + maxHit);
-    }
-
-    public void setHpMove(int _hpMoves){
-        hpMove = _hpMoves;
-        System.out.println("Displayable (setHpMove)" + hpMove);
     }
 
     public void setHp(int _h){

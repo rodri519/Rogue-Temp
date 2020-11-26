@@ -2,8 +2,8 @@ package game;
 
 public class Action {
     private String msg;
-    private int v;
-    private char c;
+    public int actionIntValue;
+    public char actionCharValue;
     public Action() { System.out.println("Action (Action)");}
 
     public void setMessage(String _msg){
@@ -12,13 +12,13 @@ public class Action {
     }
 
     public void setIntValue(int _v){
-        v = _v;
-        System.out.println("Action (GetDungeon) " + v);
+        actionIntValue = _v;
+        System.out.println("Action (GetDungeon) " + actionIntValue);
     }
 
     public void setCharValue(char _c){
-        c = _c;
-        System.out.println("Action (setCharValue) " + c);
+        actionCharValue = _c;
+        System.out.println("Action (setCharValue) " + actionCharValue);
     }
 
 

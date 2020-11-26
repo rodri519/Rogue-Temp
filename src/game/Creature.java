@@ -1,7 +1,7 @@
 package game;
 
 public abstract class Creature extends Displayable{
-    private int hpm;
+    public int hpMoves;
     private CreatureAction da;
     private CreatureAction ha;
     public Creature(){
@@ -10,8 +10,8 @@ public abstract class Creature extends Displayable{
 
 
     public void setHpMove(int _hpm){
-        hpm = _hpm;
-        System.out.println("Creature (setHpMove) " + hpm);
+        hpMoves = _hpm;
+        System.out.println("Creature (setHpMove) " + hpMoves);
     }
 
     public void setDeathAction(CreatureAction _da){

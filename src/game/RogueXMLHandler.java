@@ -111,12 +111,13 @@ public class RogueXMLHandler extends DefaultHandler{
             String type = attributes.getValue("type");
             CreatureAction creatureAction = new CreatureAction(name, type);
             actionBeingParsed = creatureAction;
+            creatureBeingParsed.addAction(actionBeingParsed);
         } else if (qName.equalsIgnoreCase("ItemAction")) {
             String name = attributes.getValue("name");
             String type = attributes.getValue("type");
             ItemAction itemAction = new ItemAction(name, type);
             actionBeingParsed = itemAction;
-
+            itemBeingParsed.addAction(actionBeingParsed);
         } else if (qName.equalsIgnoreCase("Scroll")) {
             String name = attributes.getValue("name");
             int room = Integer.parseInt(attributes.getValue("room"));
@@ -125,12 +126,14 @@ public class RogueXMLHandler extends DefaultHandler{
             scroll.setName(name);
             scroll.setID(room, serial);
             scroll.setChar('?');
-            scroll.setOwner(creatureBeingParsed);
             itemBeingParsed = scroll;
-            if (creatureBeingParsed == null) {
-                roomBeingParsed.setItem(scroll);
+            if (creatureBeingParsed != null && creatureBeingParsed instanceof Player) {
+                player.addItem(itemBeingParsed);
+                scroll.setOwner(creatureBeingParsed);
             }
-
+            else if (roomBeingParsed != null) {
+                roomBeingParsed.setItem(itemBeingParsed);
+            }
         } else if (qName.equalsIgnoreCase("Armor")) {
             String name = attributes.getValue("name");
             int room = Integer.parseInt(attributes.getValue("room"));
@@ -139,10 +142,13 @@ public class RogueXMLHandler extends DefaultHandler{
             armor.setName(name);
             armor.setID(room, serial);
             armor.setChar(']');
-            armor.setOwner(creatureBeingParsed);
             itemBeingParsed = armor;
-            if (creatureBeingParsed == null) {
-                roomBeingParsed.setItem(armor);
+            if (creatureBeingParsed != null && creatureBeingParsed instanceof Player) {
+                player.addItem(itemBeingParsed);
+                itemBeingParsed.setOwner(creatureBeingParsed);
+            }
+            else if (roomBeingParsed != null) {
+                roomBeingParsed.setItem(itemBeingParsed);
             }
         } else if (qName.equalsIgnoreCase("Sword")) {
             String name = attributes.getValue("name");
@@ -152,10 +158,13 @@ public class RogueXMLHandler extends DefaultHandler{
             sword.setName(name);
             sword.setID(room, serial);
             sword.setChar(')');
-            sword.setOwner(creatureBeingParsed);
             itemBeingParsed = sword;
-            if (creatureBeingParsed == null) {
-                roomBeingParsed.setItem(sword);
+            if (creatureBeingParsed != null && creatureBeingParsed instanceof Player) {
+                player.addItem(itemBeingParsed);
+                itemBeingParsed.setOwner(creatureBeingParsed);
+            }
+            else if (roomBeingParsed != null) {
+                roomBeingParsed.setItem(itemBeingParsed);
             }
         } else if (qName.equalsIgnoreCase("posX")) {
             bPosX = true;
@@ -201,7 +210,6 @@ public class RogueXMLHandler extends DefaultHandler{
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (actionBeingParsed != null) {
-            //associate action with either creature or item
             if (bActionMessage) {
                 actionBeingParsed.setMessage(data.toString());
                 bActionMessage = false;
@@ -214,7 +222,6 @@ public class RogueXMLHandler extends DefaultHandler{
                 bActionCharValue = false;
             }
         } else if (itemBeingParsed != null) {
-            //associate item with either creature or room
             if (bPosX) {
                 itemBeingParsed.setPosX(Integer.parseInt(data.toString()));
                 bPosX = false;

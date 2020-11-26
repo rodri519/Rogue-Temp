@@ -21,10 +21,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private Char[] topGrid = null;
     private int[] playerCoords = null;
     private List<InputObserver> inputObservers = null;
-    public List<Room> rooms = new ArrayList<Room>();
-    public List<Char> monsterChars = new ArrayList<Char>();
-    public List<Passage> passages = new ArrayList<Passage>();
-    public List<Item> droppedItems = new ArrayList<Item>();
+    public List<Room> rooms;
+    public List<Char> monsterChars = new ArrayList<>();
+    public List<Passage> passages;
+    public List<Item> droppedItems = new ArrayList<>();
+    public List<Char> displayableChars = new ArrayList<>();
     private Player player;
     private static int height;
     private static int width;
@@ -53,6 +54,17 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         player = handler.player;
         topGrid = new Char[width];
         setTopGrid();
+        displayableChars.add(new Char('X'));
+        displayableChars.add(new Char('#'));
+        displayableChars.add(new Char('+'));
+        displayableChars.add(new Char('.'));
+        displayableChars.add(new Char('T'));
+        displayableChars.add(new Char('S'));
+        displayableChars.add(new Char('H'));
+        displayableChars.add(new Char('@'));
+        displayableChars.add(new Char(')'));
+        displayableChars.add(new Char(']'));
+        displayableChars.add(new Char('?'));
 
         //find player location
         for (Room r : rooms) {
@@ -156,6 +168,13 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         objectGrid[playerCoords[0]][playerCoords[1]] = player.aChar;
     }
 
+    private void resetTop() {
+        //set all Chars of bottomGrid to ' '
+        for (int i = 0; i < width; i++) {
+                topGrid[i] = new Char(' ');
+        }
+    }
+
     private void setTopGrid(){
         String hpRemaining = "GAME OVER";
         if (player.hp > 0) {
@@ -189,11 +208,10 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
 
     private void attackMonster(Room room, Monster monster) {
         Random rand = new Random();
-        int damage = player.maxHit;
+        int attack = rand.nextInt(player.maxHit + 1);
         if (player.sword != null) {
-            damage = damage + player.sword.intValue;
+            attack = attack + player.sword.intValue;
         }
-        int attack = rand.nextInt(damage + 1);
         /*
         call function that updates bottom display with attack, defend
          */
@@ -207,18 +225,17 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             int defend = rand.nextInt(monster.maxHit + 1);
             displayAttack(attack, defend);
             if (player.armor != null) {
-                if (defend >= player.armor.hp) {
-                    defend -= player.armor.hp;
-                    player.armor = null;
+                if (defend > player.armor.intValue) {
+                    defend -= player.armor.intValue;
                 }
                 else {
-                    player.armor.hp -= damage;
+                    defend = 0;
                 }
             }
             player.setHp(player.hp - defend);
+            resetTop();
             setTopGrid();
             if (player.hp <= 0) {
-                //following according to description, but could be <=
                 gameOver();
             }
         }
@@ -308,33 +325,43 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         if (DEBUG > 0) {
             System.out.println(CLASSID + ".keyTyped entered" + e.toString());
         }
-        KeyEvent keypress = (KeyEvent) e;
-        if (keypress.getKeyChar() == 'h'){
-            playerCoords[0]--;
-            checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
-                playerCoords[0]++;
-            }
-        }
-        else if (keypress.getKeyChar() == 'j'){
-            playerCoords[1]++;
-            checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
-                playerCoords[1]--;
-            }
-        }
-        else if (keypress.getKeyChar() == 'k'){
-            playerCoords[1]--;
-            checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
-                playerCoords[1]++;
-            }
-        }
-        else if (keypress.getKeyChar() == 'l'){
-            playerCoords[0]++;
-            checkForMonster();
-            if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+        KeyEvent keypress = e;
+        if (keypress.getKeyChar() == 'h' || keypress.getKeyChar() == 'j' || keypress.getKeyChar() == 'k' || keypress.getKeyChar() == 'l') {
+            if (keypress.getKeyChar() == 'h') {
                 playerCoords[0]--;
+                checkForMonster();
+                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                    playerCoords[0]++;
+                }
+            } else if (keypress.getKeyChar() == 'j') {
+                playerCoords[1]++;
+                checkForMonster();
+                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                    playerCoords[1]--;
+                }
+            } else if (keypress.getKeyChar() == 'k') {
+                playerCoords[1]--;
+                checkForMonster();
+                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                    playerCoords[1]++;
+                }
+            } else if (keypress.getKeyChar() == 'l') {
+                playerCoords[0]++;
+                checkForMonster();
+                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                    playerCoords[0]--;
+                }
+            }
+            player.totalMoves += 1;
+            if (player.totalMoves % player.hpMoves == 0) {
+                player.hp += 1;
+                resetTop();
+                setTopGrid();
+            }
+            if (player.hallucinate != null) {
+                if (player.hallucinate.duration <= player.totalMoves - player.hallucinate.startMoves) {
+                    player.hallucinate = null;
+                }
             }
         }
         else if (keypress.getKeyChar() == 'p'){
@@ -429,13 +456,49 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 }
                 if (packItem == null || !(packItem instanceof Scroll)) {
                     resetBottom();
-                    String errorMessage = "Item is not readable or does not exist.";
+                    String errorMessage = "Item is not readable. Select a scroll to read.";
                     for (int i = 0; i < errorMessage.length(); i++){
                         bottomGrid[i][1] = new Char(errorMessage.charAt(i));
                     }
                 }
                 else {
-                    //EXECUTE ACTIONS OF SCROLL
+                    for (Action action : packItem.actions) {
+                        if (action.actionCharValue == 'a') {
+                            String message;
+                            if (player.armor == null) {
+                                message = "No armor being worn, scroll unable to curse item.";
+                            } else {
+                                player.armor.intValue -= action.actionIntValue;
+                                if (player.armor.intValue < 0) {
+                                    player.armor.intValue = 0;
+                                }
+                                message = "Armor cursed! " + action.actionIntValue + " taken from its effectiveness.";
+                            }
+                            resetBottom();
+                            for (int i = 0; i < message.length(); i++) {
+                                bottomGrid[i][1] = new Char(message.charAt(i));
+                            }
+                        } else if (action.actionCharValue == 'w') {
+                            String message;
+                            if (player.sword == null) {
+                                message = "No sword being yielded, scroll unable to curse item.";
+                            } else {
+                                player.sword.intValue -= action.actionIntValue;
+                                if (player.sword.intValue < 0) {
+                                    player.sword.intValue = 0;
+                                }
+                                message = "Sword cursed! " + action.actionIntValue + " taken from its effectiveness.";
+                            }
+                            resetBottom();
+                            for (int i = 0; i < message.length(); i++) {
+                                bottomGrid[i][1] = new Char(message.charAt(i));
+                            }
+                        }
+                        else {
+                            //HALLUCINATE CODE
+                            player.hallucinate = new Hallucinate(player, action);
+                        }
+                    }
                     player.pack.remove(packItem);
                 }
             }
@@ -509,7 +572,15 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < gameHeight; j++) {
-                addObjectToDisplay(objectGrid[i][j], i, j + topHeight);
+                if (player.hallucinate != null) {
+                    if (objectGrid[i][j].getChar() != ' '){
+                        int rnd = new Random().nextInt(displayableChars.size());
+                        addObjectToDisplay(displayableChars.get(rnd), i, j + topHeight);
+                    }
+                }
+                else {
+                    addObjectToDisplay(objectGrid[i][j], i, j + topHeight);
+                }
             }
         }
         for (int i = 0; i < width; i++) {
