@@ -236,7 +236,8 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             resetTop();
             setTopGrid();
             if (player.hp <= 0) {
-                gameOver();
+                //following according to description, but could be <=
+                gameOver(0);
             }
         }
     }
@@ -275,8 +276,86 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         }
     }
 
-    private void gameOver() {
-        System.out.println("GAME OVER");
+    private void displayCommands() {
+        //display list of possible commands
+        resetBottom();
+        String str = "h,l,k,j,i,?,H,c,d,p,r,T,w,E,0-9. H <cmd> for more info";
+        for (int i = 0; i < str.length(); i++) {
+            for (int j = 0; j < 1; j++) {
+                bottomGrid[i][j] = new Char(str.charAt(i));
+            }
+        }
+    }
+
+    private void displayCommandInfo(String s) {
+        resetBottom();
+        String str = " ";
+        if (s == "h"){
+            str = "Command h: Moves the player one spot to the left.";
+        }
+        else if (s == "l"){
+            str = "Command l: Moves the player one spot to the right.";
+        }
+        else if (s == "k"){
+            str = "Command k: Moves the player one spot up.";
+        }
+        else if (s == "j"){
+            str = "Command j: Moves the player one spot down.";
+        }
+        else if (s == "i"){
+            str = "Command i: Displays the contents of the pack.";
+        }
+        else if (s == "?"){
+            str = "Command ?: Shows a list of all the possible commands.";
+        }
+        else if (s == "H"){
+            str = "Command H <command>: Gives more detailed information on each command.";
+        }
+        else if (s == "c"){
+            str = "Command c: Armor that is being worn is taken off and placed in the pack.";
+        }
+        else if (s == "d"){
+            str = "Command d <integer>: drops item <integer> from the pack.";
+        }
+        else if (s == "p"){
+            str = "Command p: Picks up an item off the dungeon floor and adds it to the pack.";
+        }
+        else if (s == "r"){
+            str = "Command r <integer>: Reads a scroll and in turn uses that scroll.";
+        }
+        else if (s == "T"){
+            str = "Command T <integer>: Takes out the sword of <integer> and wields it.";
+        }
+        else if (s == "w"){
+            str = "Command w <integer>: Wears the armor of <integer>";
+        }
+        else if (s == "E"){
+            str = "Command E: Ends the game.";
+        }
+        else if (s == "0"){
+            str = "Integer: Used to select a specific item from the pack.";
+        }
+        for (int i = 0; i < str.length(); i++) {
+            for (int j = 0; j < 1; j++) {
+                bottomGrid[i][j] = new Char(str.charAt(i));
+            }
+        }
+    }
+
+    private void gameOver(int i) {
+        resetBottom();
+        String str;
+        if (i == 1) {
+            str = "The game was ended manually";
+        }
+        else{
+            str = "You died. Game Over.";
+        }
+        for (int k = 0; k < str.length(); k++) {
+            for (int j = 0; j < 1; j++) {
+                bottomGrid[k][j] = new Char(str.charAt(k));
+            }
+        }
     }
 
     private void checkForItem() {
@@ -328,28 +407,44 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         KeyEvent keypress = e;
         if (keypress.getKeyChar() == 'h' || keypress.getKeyChar() == 'j' || keypress.getKeyChar() == 'k' || keypress.getKeyChar() == 'l') {
             if (keypress.getKeyChar() == 'h') {
-                playerCoords[0]--;
-                checkForMonster();
-                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
-                    playerCoords[0]++;
+                if (lastChar == 'H') {
+                    displayCommandInfo("h");
+                } else {
+                    playerCoords[0]--;
+                    checkForMonster();
+                    if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                        playerCoords[0]++;
+                    }
                 }
             } else if (keypress.getKeyChar() == 'j') {
-                playerCoords[1]++;
-                checkForMonster();
-                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
-                    playerCoords[1]--;
+                if (lastChar == 'H') {
+                    displayCommandInfo("j");
+                } else {
+                    playerCoords[1]++;
+                    checkForMonster();
+                    if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                        playerCoords[1]--;
+                    }
                 }
             } else if (keypress.getKeyChar() == 'k') {
-                playerCoords[1]--;
-                checkForMonster();
-                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
-                    playerCoords[1]++;
+                if (lastChar == 'H') {
+                    displayCommandInfo("k");
+                } else {
+                    playerCoords[1]--;
+                    checkForMonster();
+                    if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                        playerCoords[1]++;
+                    }
                 }
             } else if (keypress.getKeyChar() == 'l') {
-                playerCoords[0]++;
-                checkForMonster();
-                if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
-                    playerCoords[0]--;
+                if (lastChar == 'H') {
+                    displayCommandInfo("l");
+                } else {
+                    playerCoords[0]++;
+                    checkForMonster();
+                    if (objectGrid[playerCoords[0]][playerCoords[1]].getChar() == 'X' || objectGrid[playerCoords[0]][playerCoords[1]].getChar() == ' ' || monsterChars.contains(objectGrid[playerCoords[0]][playerCoords[1]])) {
+                        playerCoords[0]--;
+                    }
                 }
             }
             player.totalMoves += 1;
@@ -365,45 +460,70 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             }
         }
         else if (keypress.getKeyChar() == 'p'){
-            checkForItem();
+            if (lastChar == 'H'){
+                displayCommandInfo("p");
+            }
+            else {
+                checkForItem();
+            }
         }
         else if (keypress.getKeyChar() == 'd'){
             //removes LAST item from pack, updates location and adds to dropped items
             //can drop anywhere player can go - including on monsters, which will probably need to be changed
-            if (player.pack.size() > 0) {
-                Item dropped = player.pack.get(player.pack.size() - 1);
-                dropped.posX = playerCoords[0];
-                dropped.posY = playerCoords[1];
-                droppedItems.add(dropped);
-                dropped.setOwner(null);
-                player.pack.remove(dropped);
+            if (lastChar == 'H'){
+                displayCommandInfo("d");
+            }
+            else {
+                if (player.pack.size() > 0) {
+                    Item dropped = player.pack.get(player.pack.size() - 1);
+                    dropped.posX = playerCoords[0];
+                    dropped.posY = playerCoords[1];
+                    droppedItems.add(dropped);
+                    dropped.setOwner(null);
+                    player.pack.remove(dropped);
+                }
             }
         }
         else if (keypress.getKeyChar() == 'i'){
             //displays pack in bottom display
-            resetBottom();
-            displayPack();
-        }
-        else if (keypress.getKeyChar() == 'r'){
-            //item actions of scroll execute
-        }
-        else if (keypress.getKeyChar() == 'T'){
-            //modify player damage based on whether they are wielding sword
-        }
-        else if (keypress.getKeyChar() == 'w'){
-            //modify player hp based on whether they are wearing armor
-        }
-        else if (keypress.getKeyChar() == 'c'){
-            if (player.armor == null) {
-                resetBottom();
-                String errorMessage = "Player is not currently wearing armor.";
-                for (int i = 0; i < errorMessage.length(); i++){
-                    bottomGrid[i][1] = new Char(errorMessage.charAt(i));
-                }
+            if (lastChar == 'H'){
+                displayCommandInfo("i");
             }
             else {
-                player.pack.add(player.armor);
-                player.armor = null;
+                resetBottom();
+                displayPack();
+            }
+        }
+        else if (keypress.getKeyChar() == 'r'){
+            if (lastChar == 'H'){
+                displayCommandInfo("r");
+            }
+        }
+        else if (keypress.getKeyChar() == 'T'){
+            if (lastChar == 'H'){
+                displayCommandInfo("T");
+            }
+        }
+        else if (keypress.getKeyChar() == 'w'){
+            if (lastChar == 'H'){
+                displayCommandInfo("w");
+            }
+        }
+        else if (keypress.getKeyChar() == 'c'){
+            if (lastChar == 'H'){
+                displayCommandInfo("c");
+            }
+            else {
+                if (player.armor == null) {
+                    resetBottom();
+                    String errorMessage = "Player is not currently wearing armor.";
+                    for (int i = 0; i < errorMessage.length(); i++) {
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                } else {
+                    player.pack.add(player.armor);
+                    player.armor = null;
+                }
             }
             //if no armor on then display message
         }
@@ -411,7 +531,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             int index = Character.getNumericValue(keypress.getKeyChar()) - 1;
             Item packItem = null;
             if (lastChar == 'H') {
-                //ADD HELP COMMAND
+                displayCommandInfo("0");
             }
             else if (lastChar == 'w') {
                 try {
@@ -532,12 +652,33 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 }
             }
         }
+        else if (keypress.getKeyChar() == '?'){
+            //displays list of possible commands
+            if (lastChar == 'H'){
+                displayCommandInfo("?");
+            }
+            else {
+                displayCommands();
+            }
+        }
+        else if (keypress.getKeyChar() == 'E'){
+            //ends the game
+            if (lastChar == 'H'){
+                displayCommandInfo("h");
+            }
+            else {
+                gameOver(1);
+            }
+
+        }
+
 
         notifyInputObservers(keypress.getKeyChar());
         setObjectGrid();
         initializeDisplay();
         lastChar = keypress.getKeyChar();
     }
+
 
     @Override
     public void registerInputObserver(InputObserver observer) {
