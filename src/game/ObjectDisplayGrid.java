@@ -212,17 +212,17 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         if (player.sword != null) {
             attack = attack + player.sword.intValue;
         }
-        /*
-        call function that updates bottom display with attack, defend
-         */
-        resetBottom();
+        hitActions(monster);
         monster.setHp(monster.hp - attack);
         if (monster.hp <= 0) {
-            room.monsters.remove(monster);
+            //Monster DEATH ACTIONS
+            deathActions(monster, room);
+            //room.monsters.remove(monster);
             displayAttack(attack, -1);
         }
         else {
             int defend = rand.nextInt(monster.maxHit + 1);
+            hitActions(player);
             displayAttack(attack, defend);
             if (player.armor != null) {
                 if (defend > player.armor.intValue) {
@@ -236,7 +236,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             resetTop();
             setTopGrid();
             if (player.hp <= 0) {
-                //following according to description, but could be <=
+                deathActions(player, room);
                 gameOver(0);
             }
         }
@@ -244,17 +244,81 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
 
     private void displayAttack(int attack, int defend) {
         //attack is the damage the player does to monster, defend is damage monster does to player
+        resetBottom();
         String monHit = "";
         if (defend != -1) {
             monHit = "The monster hit you for " + defend + " hitpoints!";
         }
         String playHit = "You hit the monster for " + attack + " hitpoints!";
-
         for (int i = 0; i < monHit.length(); i++){
             bottomGrid[i][1] = new Char(monHit.charAt(i));
         }
         for (int i = 0; i < playHit.length(); i++){
             bottomGrid[i][0] = new Char(playHit.charAt(i));
+        }
+    }
+
+    private void hitActions(Creature creature) {
+        for (Action action : creature.actions) {
+            if (action.type.equals("hit")) {
+                if (action.name.equals("Teleport")) {
+                    System.out.println("Teleporting");
+                    //Monster hit action - player teleports
+                    int rnd = new Random().nextInt(rooms.size());
+                    boolean status = false;
+                    while (status != true) {
+                        Room current = rooms.get(rnd);
+                        int rndX = new Random().nextInt(current.width);
+                        int rndY = new Random().nextInt(current.height);
+                        if (objectGrid[current.posX + rndX][current.posY + rndY].getChar() == '.') {
+                            status = true;
+                            playerCoords[0] = current.posX + rndX;
+                            playerCoords[1] = current.posY + rndY;
+                        }
+                    }
+                }
+                else if (action.name.equals("DropPack")) {
+                    //Player hit action - player drops item
+                    Item dropped = player.pack.get(player.pack.size() - 1);
+                    dropped.posX = playerCoords[0];
+                    dropped.posY = playerCoords[1];
+                    droppedItems.add(dropped);
+                    dropped.setOwner(null);
+                    player.pack.remove(dropped);
+                }
+            }
+        }
+    }
+
+    private void deathActions(Creature creature, Room room) {
+        for (Action action : creature.actions) {
+            if (action.type.equals("death")) {
+                if (action.name.equals("ChangeDisplayedType")) {
+                    //Update the character displayed for the creature
+                    creature.setChar(action.actionCharValue);
+                }
+                else if (action.name.equals("UpdateDisplay")) {
+                    //update top display
+                    resetTop();
+                    setTopGrid();
+                }
+                else if (action.name.equals("Remove")) {
+                    //Remove creature from display
+                    room.monsters.remove(creature);
+                }
+                else if (action.name.equals("YouWin")) {
+                    //Display actionMessage from xml file
+                    resetBottom();
+                    String msg = action.msg;
+                    for (int i = 0; i < msg.length(); i++){
+                        bottomGrid[i][1] = new Char(msg.charAt(i));
+                    }
+                }
+                else if (action.name.equals("EndGame")) {
+                    //Ends the game from player dying
+                    gameOver(0);
+                }
+            }
         }
     }
 

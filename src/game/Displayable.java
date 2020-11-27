@@ -81,6 +81,7 @@ public abstract class Displayable {
 
     public void setChar(char _c){
         aChar = new Char(_c);
+        System.out.println(aChar);
     }
 
 }

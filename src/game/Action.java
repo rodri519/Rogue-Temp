@@ -1,10 +1,18 @@
 package game;
 
 public class Action {
-    private String msg;
+    public String msg;
     public int actionIntValue;
     public char actionCharValue;
-    public Action() { System.out.println("Action (Action)");}
+    public String name;
+    public String type;
+
+    public Action(){}
+    public Action(String _name, String _type){
+        name = _name;
+        type = _type;
+        System.out.println("ItemAction (ItemAction), name = " + name + ", type = " + type);
+    }
 
     public void setMessage(String _msg){
         msg = _msg;
