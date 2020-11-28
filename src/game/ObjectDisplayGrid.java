@@ -563,23 +563,6 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 checkForItem();
             }
         }
-        else if (keypress.getKeyChar() == 'd'){
-            //removes LAST item from pack, updates location and adds to dropped items
-            //can drop anywhere player can go - including on monsters, which will probably need to be changed
-            if (lastChar == 'H'){
-                displayCommandInfo("d");
-            }
-            else {
-                if (player.pack.size() > 0) {
-                    Item dropped = player.pack.get(player.pack.size() - 1);
-                    dropped.posX = playerCoords[0];
-                    dropped.posY = playerCoords[1];
-                    droppedItems.add(dropped);
-                    dropped.setOwner(null);
-                    player.pack.remove(dropped);
-                }
-            }
-        }
         else if (keypress.getKeyChar() == 'i'){
             //displays pack in bottom display
             if (lastChar == 'H'){
@@ -588,6 +571,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             else {
                 resetBottom();
                 displayPack();
+            }
+        }
+        else if (keypress.getKeyChar() == 'd'){
+            if (lastChar == 'H'){
+                displayCommandInfo("d");
             }
         }
         else if (keypress.getKeyChar() == 'r'){
@@ -665,6 +653,28 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                     for (int i = 0; i < errorMessage.length(); i++){
                         bottomGrid[i][1] = new Char(errorMessage.charAt(i));
                     }
+                }
+            }
+            else if (lastChar == 'd'){
+                //removes LAST item from pack, updates location and adds to dropped items
+                //can drop anywhere player can go - including on monsters, which will probably need to be changed
+                try {
+                    packItem = player.pack.get(index);
+                }
+                catch(Exception ex) {
+                    resetBottom();
+                    String errorMessage = "Item does not exist so no item is dropped.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
+                }
+                if (player.pack.size() > 0 && packItem != null) {
+                    Item dropped = player.pack.get(index);
+                    dropped.posX = playerCoords[0];
+                    dropped.posY = playerCoords[1];
+                    droppedItems.add(dropped);
+                    dropped.setOwner(null);
+                    player.pack.remove(dropped);
                 }
             }
             else if (lastChar == 'r') {
