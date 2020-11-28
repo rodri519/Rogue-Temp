@@ -26,6 +26,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     public List<Passage> passages;
     public List<Item> droppedItems = new ArrayList<>();
     public List<Char> displayableChars = new ArrayList<>();
+    public int gamedone = 0;
     private Player player;
     private static int height;
     private static int width;
@@ -409,6 +410,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private void gameOver(int i) {
         resetBottom();
         String str;
+        gamedone = 1;
         if (i == 1) {
             str = "The game was ended manually";
         }
@@ -467,6 +469,9 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     public void keyTyped(KeyEvent e) {
         if (DEBUG > 0) {
             System.out.println(CLASSID + ".keyTyped entered" + e.toString());
+        }
+        if (gamedone == 1){
+            return;
         }
         KeyEvent keypress = e;
         if (keypress.getKeyChar() == 'h' || keypress.getKeyChar() == 'j' || keypress.getKeyChar() == 'k' || keypress.getKeyChar() == 'l') {
