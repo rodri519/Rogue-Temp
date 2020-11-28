@@ -20,6 +20,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private Char[][] bottomGrid = null;
     private Char[] topGrid = null;
     private int[] playerCoords = null;
+    private int[] lastCoords = null;
     private List<InputObserver> inputObservers = null;
     public List<Room> rooms;
     public List<Char> monsterChars = new ArrayList<>();
@@ -51,6 +52,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         bottomGrid = new Char[width][bottomHeight];
         finalGrid = new Char[width][height];
         playerCoords = new int[2];
+        lastCoords = new int[2];
         player = handler.player;
         topGrid = new Char[width];
         setTopGrid();
@@ -207,37 +209,43 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     }
 
     private void attackMonster(Room room, Monster monster) {
-        Random rand = new Random();
-        int attack = rand.nextInt(player.maxHit + 1);
-        if (player.sword != null) {
-            attack = attack + player.sword.intValue;
-        }
-        hitActions(monster);
-        monster.setHp(monster.hp - attack);
-        if (monster.hp <= 0) {
-            //Monster DEATH ACTIONS
-            deathActions(monster, room);
-            //room.monsters.remove(monster);
-            displayAttack(attack, -1);
-        }
-        else {
-            int defend = rand.nextInt(monster.maxHit + 1);
-            hitActions(player);
-            displayAttack(attack, defend);
-            if (player.armor != null) {
-                if (defend > player.armor.intValue) {
-                    defend -= player.armor.intValue;
+        if (monster.hp >= 0) {
+            Random rand = new Random();
+            int attack = rand.nextInt(player.maxHit + 1);
+            if (player.sword != null) {
+                attack = attack + player.sword.intValue;
+            }
+            hitActions(monster);
+            monster.setHp(monster.hp - attack);
+            if (monster.hp <= 0) {
+                //Monster DEATH ACTIONS
+                deathActions(monster, room);
+                displayAttack(attack, -1);
+            } else {
+                int defend = rand.nextInt(monster.maxHit + 1);
+                hitActions(player);
+                displayAttack(attack, defend);
+                if (player.armor != null) {
+                    if (defend > player.armor.intValue) {
+                        defend -= player.armor.intValue;
+                    } else {
+                        defend = 0;
+                    }
                 }
-                else {
-                    defend = 0;
+                player.setHp(player.hp - defend);
+                resetTop();
+                setTopGrid();
+                if (player.hp <= 0) {
+                    deathActions(player, room);
+                    gameOver(0);
                 }
             }
-            player.setHp(player.hp - defend);
-            resetTop();
-            setTopGrid();
-            if (player.hp <= 0) {
-                deathActions(player, room);
-                gameOver(0);
+        }
+        else {
+            resetBottom();
+            String deadMonster = "Monster is already dead. No actions performed.";
+            for (int i = 0; i < deadMonster.length(); i++){
+                bottomGrid[i][1] = new Char(deadMonster.charAt(i));
             }
         }
     }
@@ -262,7 +270,6 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         for (Action action : creature.actions) {
             if (action.type.equals("hit")) {
                 if (action.name.equals("Teleport")) {
-                    System.out.println("Teleporting");
                     //Monster hit action - player teleports
                     int rnd = new Random().nextInt(rooms.size());
                     boolean status = false;
@@ -279,12 +286,14 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 }
                 else if (action.name.equals("DropPack")) {
                     //Player hit action - player drops item
-                    Item dropped = player.pack.get(player.pack.size() - 1);
-                    dropped.posX = playerCoords[0];
-                    dropped.posY = playerCoords[1];
-                    droppedItems.add(dropped);
-                    dropped.setOwner(null);
-                    player.pack.remove(dropped);
+                    if (player.pack.size() > 0) {
+                        Item dropped = player.pack.get(player.pack.size() - 1);
+                        dropped.posX = lastCoords[0];
+                        dropped.posY = lastCoords[1];
+                        droppedItems.add(dropped);
+                        dropped.setOwner(null);
+                        player.pack.remove(dropped);
+                    }
                 }
             }
         }
@@ -333,7 +342,13 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private void displayPack() {
         //display contents of pack in bottom grid
         for (Item item : player.pack) {
-            String str = item.serial + " - " + item.name + " ";
+            String str = (player.pack.indexOf(item) + 1) + " - " + item.name;
+            if (item.equals(player.armor)) {
+                str += " (a)";
+            }
+            else if (item.equals(player.sword)) {
+                str += " (w)";
+            }
             for (int i = 0; i < str.length(); i++) {
                 bottomGrid[i][player.pack.indexOf(item)] = new Char(str.charAt(i));
             }
@@ -433,6 +448,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             player.pack.add(tempItem);
             tempItem.setOwner(player);
             droppedItems.remove(tempItem);
+            resetBottom();
+            String msg = "Item picked up. View inventory for details.";
+            for (int i = 0; i < msg.length(); i++) {
+                bottomGrid[i][1] = new Char(msg.charAt(i));
+            }
         }
         else {
             for (Room r : rooms) {
@@ -444,6 +464,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 if (tempItem != null) {
                     pickUpItem(r, tempItem);
                     tempItem = null;
+                    resetBottom();
+                    String msg = "Item picked up. View inventory for details.";
+                    for (int i = 0; i < msg.length(); i++) {
+                        bottomGrid[i][1] = new Char(msg.charAt(i));
+                    }
                 }
             }
         }
@@ -470,6 +495,8 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         }
         KeyEvent keypress = e;
         if (keypress.getKeyChar() == 'h' || keypress.getKeyChar() == 'j' || keypress.getKeyChar() == 'k' || keypress.getKeyChar() == 'l') {
+            lastCoords[0] = playerCoords[0];
+            lastCoords[1] = playerCoords[1];
             if (keypress.getKeyChar() == 'h') {
                 if (lastChar == 'H') {
                     displayCommandInfo("h");
@@ -587,9 +614,13 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 } else {
                     player.pack.add(player.armor);
                     player.armor = null;
+                    resetBottom();
+                    String errorMessage = "Armor removed. Player is no longer wearing armor.";
+                    for (int i = 0; i < errorMessage.length(); i++) {
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
                 }
             }
-            //if no armor on then display message
         }
         else if (keypress.getKeyChar() == '1' || keypress.getKeyChar() == '2' || keypress.getKeyChar() == '3' || keypress.getKeyChar() == '4' || keypress.getKeyChar() == '5' || keypress.getKeyChar() == '6' || keypress.getKeyChar() == '7' || keypress.getKeyChar() == '8' || keypress.getKeyChar() == '9') {
             int index = Character.getNumericValue(keypress.getKeyChar()) - 1;
@@ -623,8 +654,12 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                     }
                 }
                 else {
-                    player.pack.remove(packItem);
                     player.setArmor(packItem);
+                    resetBottom();
+                    String errorMessage = "Player is now wearing armor.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
                 }
             }
             else if (lastChar == 'r') {
@@ -680,7 +715,12 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                         }
                         else {
                             //HALLUCINATE CODE
-                            player.hallucinate = new Hallucinate(player, action);
+                            player.hallucinate = new Hallucinate(player, (ItemAction) action);
+                            resetBottom();
+                            String message = "Hallucincations have begun. Continuing for " + player.hallucinate.duration + " moves.";
+                            for (int i = 0; i < message.length(); i++) {
+                                bottomGrid[i][1] = new Char(message.charAt(i));
+                            }
                         }
                     }
                     player.pack.remove(packItem);
@@ -713,6 +753,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 }
                 else {
                     player.setWeapon(packItem);
+                    resetBottom();
+                    String errorMessage = "Sword drawn. Player is now wielding a sword.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
                 }
             }
         }
@@ -733,10 +778,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
             else {
                 gameOver(1);
             }
-
         }
-
-
         notifyInputObservers(keypress.getKeyChar());
         setObjectGrid();
         initializeDisplay();
