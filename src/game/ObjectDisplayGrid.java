@@ -675,6 +675,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                     droppedItems.add(dropped);
                     dropped.setOwner(null);
                     player.pack.remove(dropped);
+                    resetBottom();
+                    String errorMessage = "Item dropped. Check Inventory for details.";
+                    for (int i = 0; i < errorMessage.length(); i++){
+                        bottomGrid[i][1] = new Char(errorMessage.charAt(i));
+                    }
                 }
             }
             else if (lastChar == 'r') {
