@@ -861,7 +861,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         }
     }
 
-    // we have to override, but we don't use this
+    // we have to override, but we don't use this 
     @Override
     public void keyPressed(KeyEvent even) {
     }
